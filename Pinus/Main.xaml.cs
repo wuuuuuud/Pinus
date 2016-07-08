@@ -348,7 +348,7 @@ namespace Pinus
 
             List<System.Drawing.Color> USBChannelColorList = new List<Color>() { Color.PaleVioletRed, Color.LightGreen, Color.Orange, Color.FromArgb(0xff, 0x66, 0xcc, 0xff) };
             int j = -1;
-            ChannelControls = new List<RibbonSplitButton>() { sbCH1, sbCH2 };//,sbCH3,sbCH4};
+            ChannelControls = new List<RibbonSplitButton>() { sbCH1, sbCH2, sbCH3,sbCH4};
             foreach (RibbonSplitButton rsb in ChannelControls)
             {
                 j++;
@@ -743,7 +743,6 @@ namespace Pinus
             bool success = false;
             filename = DateTime.Now.ToString("yyyy_MM_dd#HH_mm_ss_ff") + ".dat";
             Int32[,] number;
-            Int32[,] numberM;
             List<Tuple<int, int>> pack = new List<Tuple<int, int>>();
             while (true)
             {
@@ -767,15 +766,8 @@ namespace Pinus
                         pack.Clear();
                         var saveCount = Unpack.Run(ref rawDataBuff, ref number, ref pack);
                         number = (Int32[,])ResizeArray(number, new Int32[] { 4, saveCount - 1 });
-                        numberM = new Int32[2, 2 * (saveCount - 1)];
-                        for (int i=0;(i+1)<2*(saveCount-1);i=i+2)
-                        {
-                            numberM[0, i] = number[0, i / 2];
-                            numberM[1, i] = number[1, i / 2];
-                            numberM[0, i+1] = number[2, i / 2];
-                            numberM[1, i+1] = number[3, i / 2];
-                        }
-                        if (unpackedNumberQueue.Count < 1) unpackedNumberQueue.Enqueue(numberM);
+
+                        if (unpackedNumberQueue.Count < 1) unpackedNumberQueue.Enqueue(number);
                     }
                     
                     
@@ -897,7 +889,7 @@ namespace Pinus
             if (jump < 1) jump = 1;
             me.Series.Clear();
             List<int> usedChannel = new List<int>();
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
                 if (((USBChannel)ChannelControls[i].DataContext).enable)
                 {
@@ -948,7 +940,7 @@ namespace Pinus
             me.Series.Clear();
             GC.Collect();
             List<int> usedChannel = new List<int>();
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
                 if (((USBChannel)ChannelControls[i].DataContext).enable && (bool)uc.enabledChannel[i])
                 {
