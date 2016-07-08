@@ -1,0 +1,79 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0" 
+    xmlns:oxy="http://oxyplot.org/wpf" 
+    x:Class="Pinus.HardwareConnect"
+        Title="HardwareConnect" Height="379.286" Width="487.5" Loaded="Window_Loaded" Closing="Window_Closing">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="90" />
+            </Grid.ColumnDefinitions>
+            <ComboBox x:Name="cmbDeviceList" 
+				HorizontalAlignment="Stretch" Margin="5" 
+				VerticalAlignment="Stretch" Grid.Column="0" SelectionChanged="cmbDeviceList_SelectionChanged"/>
+            <Button x:Name="btnRefresh"  Grid.Column="1" Margin="3" VerticalAlignment="Stretch"
+				HorizontalAlignment="Stretch" Content="Refresh" Click="btnRefresh_Click" />
+        </Grid>
+        <TabControl HorizontalAlignment="Stretch" Margin="5" Grid.Row="1" 
+			VerticalAlignment="Stretch">
+            <TabItem Header="Info">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="64*"/>
+                        <ColumnDefinition Width="387*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="lbPID"
+						Content="" HorizontalAlignment="Left" 
+						Height="39" Margin="0,54,0,0" 
+						VerticalAlignment="Top" Width="214" Grid.Column="1"/>
+                    <Label x:Name="lbVID"
+						Content="" HorizontalAlignment="Left" 
+						Height="38" Margin="0,98,0,0" 
+						VerticalAlignment="Top" Width="214" Grid.Column="1"/>
+                    <Label x:Name="lbType"
+						Content="" HorizontalAlignment="Left" 
+						Height="39" Margin="0,10,0,0" 
+						VerticalAlignment="Top" Width="214" Grid.Column="1"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Firmware">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="59*"/>
+                        <ColumnDefinition Width="167*"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox HorizontalAlignment="Left" Margin="26,43,0,0"
+						VerticalAlignment="Top" Width="185"
+						SelectedIndex="0" Grid.ColumnSpan="2">
+                        <System:String>RAM</System:String>
+                        <System:String>EEPROM</System:String>
+                        <System:String>FLASH</System:String>
+                    </ComboBox>
+                    <Button x:Name="btnDownload" 
+						Content="Download" HorizontalAlignment="Left" 
+						Height="22" Margin="98.332,43,0,0" VerticalAlignment="Top" Width="74" Click="btnDownload_Click" Grid.Column="1"/>
+                    <TextBox x:Name="tbFirmwarePath" 
+						HorizontalAlignment="Left" Height="25" 
+						Margin="30,77,0,0" TextWrapping="Wrap" 
+						Text="firmware.img" VerticalAlignment="Top" 
+						Width="260" Grid.ColumnSpan="2"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Test">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

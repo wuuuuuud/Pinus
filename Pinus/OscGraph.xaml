@@ -1,0 +1,29 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:oxy="http://oxyplot.org/wpf" x:Class="Pinus.OscGraph"
+        Title="OscGraph" Height="400" Width="600" Loaded="Window_Loaded" Closing="Window_Closing"
+        >
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height ="30" />
+        </Grid.RowDefinitions>
+        <oxy:PlotView Name= "opMainPlot" Margin="5,5,5,0"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0">
+            <Label Content="显示通道：" HorizontalAlignment="Left" FontSize="16"/>
+            <ComboBox Name="cmbActivechannel" Margin="5,5,5,5.4"  HorizontalAlignment="Left" 
+                  Width="128"  SelectionChanged="cmbActivechannel_SelectionChanged" 
+                      SelectedIndex="0">
+                <ComboBoxItem Content="通道1" FontSize="14"></ComboBoxItem>
+                <ComboBoxItem Content="通道2" FontSize="14"></ComboBoxItem>
+                <ComboBoxItem Content="通道3" FontSize="14"></ComboBoxItem>
+                <ComboBoxItem Content="通道4" FontSize="14"></ComboBoxItem>
+            </ComboBox>
+            <CheckBox Name="ckbTrackPeak" Content="寻找峰值" Margin="5,5,5,5" 
+                      VerticalAlignment="Center" IsChecked="{Binding isTrackingPeak}"/>
+        </StackPanel>
+
+    </Grid>
+</Window>

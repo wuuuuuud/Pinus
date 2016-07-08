@@ -1,0 +1,225 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+    xmlns:Ribbon="clr-namespace:System.Windows.Controls.Ribbon;assembly=System.Windows.Controls.Ribbon"
+    xmlns:u="clr-namespace:Pinus;assembly=Pinus"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" 
+    x:Class="Pinus.Main"
+    xmlns:oxy="http://oxyplot.org/wpf"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+    xmlns:local="clr-namespace:Pinus" Height="413" Width="608" MinWidth="500" MinHeight="300"
+    Closing="RibbonWindow_Closing" Loaded="RibbonWindow_Loaded" Title="Vibration Measurement">
+    <Grid Margin="0,0,0,0">
+        <DockPanel Margin="0,0,0,25">
+            <Ribbon:Ribbon DockPanel.Dock="Top" HorizontalAlignment="Stretch" x:Name="ribMenu" MinWidth="400" SelectionChanged="ribMenu_SelectionChanged" Height="auto" Margin="0,-20,0,0">
+                <Ribbon:RibbonTab Header="测量" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch">
+                    <Ribbon:RibbonGroup Header="USB采集" Margin="0,0,0,5.8" VerticalAlignment="Stretch" Width="auto">
+                        <RibbonButton x:Name="btnOsc" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" 
+                    		Label="波形" Margin="0,0,0,0"
+                    		LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/minus-8x.png"
+                    		SmallImageSource="pack://siteoforigin:,,,/open-iconic/png/minus-8x.png" Click="btnOsc_Click"/>
+                        <RibbonButton x:Name="btnStart" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+							Label="开始" Margin="0,0,0,0"
+							LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/check-8x.png"
+							SmallImageSource="pack://siteoforigin:,,,/open-iconic/png/check-8x.png" Click="btnStart_Click"/>
+                        <RibbonButton x:Name="btnStop" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+							Label="停止" Margin="0,0,0,0"
+							LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/ban-8x.png"
+							SmallImageSource="pack://siteoforigin:,,,/open-iconic/png/ban-8x.png" Click="btnStop_Click"/>
+                    </Ribbon:RibbonGroup>
+                    
+                    <Ribbon:RibbonGroup VerticalAlignment="Stretch" Width="auto" Visibility="Collapsed">
+                        <Ribbon:RibbonButton x:Name="btnShowLog" Label="log"
+							LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/cloud-8x.png"
+							Click="btnShowLog_Click"/>
+                    </Ribbon:RibbonGroup>
+                    <RibbonGroup Header="配置" Margin="0,0,0,5.8" VerticalAlignment="Stretch" Width="auto">
+                        <RibbonButton x:Name="btnHardware" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="auto"
+                    		Label="硬件连接" Margin="0,0,0,0"
+                    		LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/check-8x.png"
+                    		SmallImageSource="pack://siteoforigin:,,,/open-iconic/png/check-8x.png" Click="btnHardware_Click"/>
+                        <RibbonButton x:Name="btnSavePath" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="auto" 
+                        	Label="保存路径" Margin="0,0,0,0"
+                        	LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/task-8x.png"
+                        	SmallImageSource="pack://siteoforigin:,,,/open-iconic/png/task-8x.png" Click="btnSavePath_Click"/>
+                        <RibbonButton x:Name="btnConfig" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="auto" 
+                        	Label="采集设置" Margin="0,0,0,0"
+                        	LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/tag-8x.png"
+                        	SmallImageSource="pack://siteoforigin:,,,/open-iconic/png/tag-8x.png"
+                                      Visibility="Collapsed"/>
+                        <RibbonButton Name="rbSampleRate" Height="20" Label="2 MHz" Click="rbSampleRate_Click"/>
+                        <RibbonButton Name="rbSaveLength" Height="20" Label="32 MB" Click="rbSaveLength_Click"/>
+
+
+                    </RibbonGroup>
+                    <RibbonGroup Header="显示" Margin="0,0,0,5.8" VerticalAlignment="Stretch" Width="auto">
+                        
+                        <RibbonSplitButton Name="sbCH1" Label="通道1"  VerticalAlignment="Stretch"
+                                           Click="ChannelControl_Click"
+                                           LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/task-8x.png"
+                                           >
+                            <RibbonSplitMenuItem Header="显示通道" IsCheckable="True" IsChecked="{Binding enable}" 
+                                                 Checked="ChannelControl_CheckChanged" Unchecked="ChannelControl_CheckChanged"/>
+                            <xctk:ColorPicker Margin="-40,0,-40,0"  ShowDropDownButton="False"
+                                              SelectedColorChanged="ColorPicker_SelectedColorChanged"/>
+                            <RibbonSplitMenuItem Header="数据类型">
+                                <RibbonSplitMenuItem Header="速度" IsCheckable="True" IsChecked="{Binding IsVelocity}"/>
+                                <RibbonSplitMenuItem Header="位移" IsCheckable="True" IsChecked="{Binding IsDisplacement}"/>
+                            </RibbonSplitMenuItem>
+                            <RibbonSplitMenuItem Header="滤波器设置">
+                                <TextBox Width="40" Margin =" 0,0,-12,0" Text="{Binding lpFrequencyString}" ToolTip="Low"></TextBox>
+                                <TextBox Width="40" Margin =" 0,0,-12,0" Text="{Binding hpFrequencyString}" ToolTip="High"></TextBox>
+                            </RibbonSplitMenuItem>
+                            </RibbonSplitButton>
+                        <RibbonSplitButton Name="sbCH2" Label="通道2"  VerticalAlignment="Stretch"
+                                           LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/task-8x.png"
+                                           Click="ChannelControl_Click">
+                            <RibbonSplitMenuItem Header="显示通道" IsCheckable="True" IsChecked="{Binding enable}"
+                                                 Checked="ChannelControl_CheckChanged" Unchecked="ChannelControl_CheckChanged"/>
+                            <xctk:ColorPicker Margin="-40,0,-40,0"  ShowDropDownButton="False"
+                                              SelectedColorChanged="ColorPicker_SelectedColorChanged"/>
+                            <RibbonSplitMenuItem Header="数据类型">
+                                <RibbonSplitMenuItem Header="速度" IsCheckable="True" IsChecked="{Binding IsVelocity}"/>
+                                <RibbonSplitMenuItem Header="位移" IsCheckable="True" IsChecked="{Binding IsDisplacement}"/>
+                            </RibbonSplitMenuItem>
+                            <RibbonSplitMenuItem Header="滤波器设置">
+                                <TextBox Width="40" Margin =" 0,0,-12,0" Text="{Binding lpFrequencyString}" ToolTip="Low"></TextBox>
+                                <TextBox Width="40" Margin =" 0,0,-12,0" Text="{Binding hpFrequencyString}" ToolTip="High"></TextBox>
+                            </RibbonSplitMenuItem>
+                        </RibbonSplitButton>
+                        <RibbonSplitButton Name="sbCH3" Label="通道3"  VerticalAlignment="Stretch"
+                                           LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/task-8x.png"
+                                           Click="ChannelControl_Click">
+                            <RibbonSplitMenuItem Header="显示通道" IsCheckable="True" IsChecked="{Binding enable}"
+                                                 Checked="ChannelControl_CheckChanged" Unchecked="ChannelControl_CheckChanged"/>
+                            <xctk:ColorPicker Margin="-40,0,-40,0"  ShowDropDownButton="False"
+                                              SelectedColorChanged="ColorPicker_SelectedColorChanged"/>
+                            <RibbonSplitMenuItem Header="数据类型">
+                                <RibbonSplitMenuItem Header="速度" IsCheckable="True" IsChecked="{Binding IsVelocity}"/>
+                                <RibbonSplitMenuItem Header="位移" IsCheckable="True" IsChecked="{Binding IsDisplacement}"/>
+                            </RibbonSplitMenuItem>
+                            <RibbonSplitMenuItem Header="滤波器设置">
+                                <TextBox Width="40" Margin =" 0,0,-12,0" Text="{Binding lpFrequencyString}" ToolTip="Low"></TextBox>
+                                <TextBox Width="40" Margin =" 0,0,-12,0" Text="{Binding hpFrequencyString}" ToolTip="High"></TextBox>
+                            </RibbonSplitMenuItem>
+                        </RibbonSplitButton>
+                        <RibbonSplitButton Name="sbCH4" Label="通道4"  VerticalAlignment="Stretch"
+                                           LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/task-8x.png"
+                                           Click="ChannelControl_Click">
+                            <RibbonSplitMenuItem Header="显示通道" IsCheckable="True" IsChecked="{Binding enable}"
+                                                 Checked="ChannelControl_CheckChanged" Unchecked="ChannelControl_CheckChanged"/>
+                            <xctk:ColorPicker Margin="-40,0,-40,0"  ShowDropDownButton="False"
+                                              SelectedColorChanged="ColorPicker_SelectedColorChanged"/>
+                            <RibbonSplitMenuItem Header="数据类型">
+                                <RibbonSplitMenuItem Header="速度" IsCheckable="True" IsChecked="{Binding IsVelocity}"/>
+                                <RibbonSplitMenuItem Header="位移" IsCheckable="True" IsChecked="{Binding IsDisplacement}"/>
+                            </RibbonSplitMenuItem>
+                            <RibbonSplitMenuItem Header="滤波器设置">
+                                <TextBox Width="40" Margin =" 0,0,-12,0" Text="{Binding lpFrequencyString}" ToolTip="Low"></TextBox>
+                                <TextBox Width="40" Margin =" 0,0,-12,0" Text="{Binding hpFrequencyString}" ToolTip="High"></TextBox>
+                            </RibbonSplitMenuItem>
+                        </RibbonSplitButton>
+                        <RibbonButton x:Name="btnAddPlot" Label="添加通道" Click="btnAddPlot_Click" 
+                                      LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/plus-8x.png"/>
+                        <!--<RibbonButton x:Name="btnCH1FFT" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="auto" 
+                        	Label="通道1频谱" Margin="0,0,0,0"
+                        	LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/pulse-8x.png"
+                        	SmallImageSource="pack://siteoforigin:,,,/open-iconic/png/pulse-8x.png" Click="btnShowOsc_Click"/>
+                        <RibbonComboBox Name="cmbDisplayLength" />
+                        <RibbonTextBox Name="rtbLowPassFrequency" />
+                        <RibbonButton Click="btnHelp_MouseDoubleClick" Label="Test"/>-->
+
+                    </RibbonGroup>
+                    <RibbonGroup Header="存取" Margin="0,0,0,5.8" VerticalAlignment="Stretch" Width="auto">
+                        <RibbonButton x:Name="btnOpen" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="auto" 
+                        	Label="本地读取" Margin="0,0,0,0"
+                        	LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/task-8x.png"
+                        	SmallImageSource="pack://siteoforigin:,,,/open-iconic/png/task-8x.png" Click="btnOpen_Click"/>
+                        <RibbonButton x:Name="btnSaveAs" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="auto" 
+                        	Label="数据导出" Margin="0,0,0,0"
+                        	LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/bookmark-8x.png"
+                        	SmallImageSource="pack://siteoforigin:,,,/open-iconic/png/bookmark-8x.png" Click="btnSaveAs_Click"/>
+
+                        <RibbonCheckBox Name="ckbSave" Label="保存数据？" IsChecked="{Binding saveData}"/>
+                        <RibbonTextBox Name="tbSaveMB" Visibility="Collapsed"/>
+                    </RibbonGroup>
+                    <RibbonGroup Header="帮助" Margin="0,0,0,5.8" VerticalAlignment="Stretch" Width="auto">
+                        <RibbonButton x:Name="btnHelp" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="auto" 
+                        	Label="图表控制？" Margin="0,0,0,0"
+                        	LargeImageSource="pack://siteoforigin:,,,/open-iconic/png/wrench-8x.png"
+                        	SmallImageSource="pack://siteoforigin:,,,/open-iconic/png/wrench-8x.png" Click="btnHelp_Click" />
+
+                    </RibbonGroup>
+
+                </Ribbon:RibbonTab>
+                <!--
+                <Ribbon:RibbonTab Header="硬件" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="RTHareware">
+                    <Ribbon:RibbonGroup Name="RGHarewarePanel" Header="物理通道">
+                        <Ribbon:RibbonButton Name="RBHarewareTemplate" Height="auto"  Label="" Visibility="Collapsed"/>
+                    </Ribbon:RibbonGroup>
+                </Ribbon:RibbonTab>
+                -->
+
+            </Ribbon:Ribbon>
+            <ScrollViewer DockPanel.Dock="Top" Visibility="Collapsed">
+                <DockPanel Name="DPMain" LastChildFill="False" Margin="2">
+                    <Grid Height="59" Background="Pink"  DockPanel.Dock="Top" Margin="0,0,0,0" Name="ChannelTemplate" Visibility="Visible">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="4*" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Label Name="LbChannelName" Content="channel1" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Button Name="btnChannelConfig" Content="设置" Grid.Column="2" Grid.Row="0" Width="65" Height="30" Click="btnChannelConfig_Click" />
+                        <Label Name="LbChannelValue" Content="1.0000000" Grid.Column="1" Grid.Row="0" FontSize="32" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                        <!--<oxy:Plot Title="{Binding Title}" Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Visible">
+                            <oxy:Plot.Series>
+                                <oxy:LineSeries ItemsSource="{Binding Points}"/>
+                            </oxy:Plot.Series>
+                        </oxy:Plot>-->
+                    </Grid>
+
+
+
+                </DockPanel>
+            </ScrollViewer>
+            <xcad:DockingManager DockPanel.Dock="Top"  >
+                <xcad:LayoutRoot>
+                    <xcad:LayoutPanel x:Name="layout" Orientation="Vertical">
+                        
+
+                    </xcad:LayoutPanel>
+                </xcad:LayoutRoot>
+            </xcad:DockingManager>
+        </DockPanel>
+        <StatusBar Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" MouseDoubleClick="StatusBar_MouseDoubleClick">
+            <StatusBarItem>
+                <TextBlock Name="TbBottomIndicator1" ></TextBlock>
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem>
+                <TextBlock Name="TbBottomIndicator2"></TextBlock>
+            </StatusBarItem>
+            
+
+        </StatusBar>
+        
+        <!--<Grid Margin="0,138,0,0">
+           
+            <Label x:Name="ch1value" Content="Label" HorizontalAlignment="Left" Height="27" Margin="48,52,0,0" VerticalAlignment="Top" Width="94"/>
+            <Label x:Name="ch2value" Content="Label" HorizontalAlignment="Left" Height="27" Margin="48,84,0,0" VerticalAlignment="Top" Width="94"/>
+            <Label x:Name="ch3value" Content="Label" HorizontalAlignment="Left" Height="27" Margin="48,116,0,0" VerticalAlignment="Top" Width="94"/>
+            <Label x:Name="ch4value" Content="Label" HorizontalAlignment="Left" Height="27" Margin="48,148,0,0" VerticalAlignment="Top" Width="94"/>
+
+        </Grid>-->
+        <!--<svgc:SvgViewbox Source="pack://siteoforigin:,,,/.../.../.../open-iconic/svg/check.svg" Stretch="Uniform" Margin="10,153,256,10"/>-->
+    </Grid>
+    
+</Window>
+

@@ -1,0 +1,12 @@
+﻿<Window x:Class="Pinus.Logging"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Logs" Height="327" Width="300"
+        Closing="Window_Closing"
+        >
+    <Grid>
+        <TextBox Name="tbLog" HorizontalAlignment="Stretch" Height="auto" Margin="10,10,10,10" 
+                 TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Width="auto"/>
+
+    </Grid>
+</Window>
